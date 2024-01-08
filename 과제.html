@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>영화검색</title>
+  
+  <style>
+   .movie-card {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 10px;
+      padding: 10px;
+      width: 300px;
+      display: inline-block;
+      cursor: pointer; 
+    }
+    .movie-poster {
+      width: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <h1>영화검색</h1>
+  <input type="text" id="searchInput" placeholder="Enter movie title">
+  <button onclick="searchMovie()">Search</button>
+  <div id="movieList"></div>
+
+  <script>
+    const apiKey = '7ee185cbcfbd4393c79ad650305c0cee';
+
+    async function fetchMovies() {
+      const endpoint = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ko-KR&page=1`;
+
+      try {
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        return data.results;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    function displayMovies(movies) {
+      const movieList = document.getElementById('movieList');
+      const searchInput = document.getElementById('searchInput').value.toLowerCase();
+      movieList.innerHTML = '';
+
+      movies
+        .filter(movie => movie.title.toLowerCase().includes(searchInput))
+        .forEach(movie => {
+          const card = document.createElement('div');
+          card.classList.add('movie-card');
+
+          card.addEventListener('click', function () {
+            alert(`Clicked Movie ID: ${movie.id}`);
+          });
+
+          const titleEl = document.createElement('h2');
+          titleEl.textContent = movie.title;
+
+          const overview = document.createElement('p');
+          overview.textContent = movie.overview;
+
+          const voteAverage = document.createElement('p');
+          voteAverage.textContent = 'Rating: ' + movie.vote_average;
+
+          const poster = document.createElement('img');
+          poster.classList.add('movie-poster');
+          poster.src = 'https://image.tmdb.org/t/p/w500/' + movie.poster_path;
+          poster.alt = movie.title + ' poster';
+
+          card.appendChild(titleEl);
+          card.appendChild(poster);
+          card.appendChild(overview);
+          card.appendChild(voteAverage);
+
+          movieList.appendChild(card);
+        });
+    }
+
+    window.onload = async function() {
+      const movies = await fetchMovies();
+      displayMovies(movies);
+    };
+
+    async function searchMovie() {
+      const movies = await fetchMovies();
+      displayMovies(movies);
+    }
+  </script>
+</body>
+</html>
