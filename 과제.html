@@ -2,10 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>영화검색</title>
   
-  <style>
+ 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>영화검색</title>
+  <script src="config.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    let mykey = config.apikey;
+  </script>
+  </head>
+    <style>
    .movie-card {
       border: 1px solid #ccc;
       border-radius: 5px;
@@ -28,10 +34,11 @@
   <div id="movieList"></div>
 
   <script>
-    const apiKey = '7ee185cbcfbd4393c79ad650305c0cee';
+    
+    
 
     async function fetchMovies() {
-      const endpoint = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ko-KR&page=1`;
+      const endpoint = `https://api.themoviedb.org/3/movie/popular?api_key=${mykey}&language=ko-KR&page=1`;
 
       try {
         const response = await fetch(endpoint);
@@ -89,6 +96,7 @@
       const movies = await fetchMovies();
       displayMovies(movies);
     }
+  
   </script>
 </body>
 </html>
